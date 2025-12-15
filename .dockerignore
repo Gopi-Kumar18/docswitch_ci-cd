@@ -1,0 +1,24 @@
+# Sensitive files and credentials
+./backend/.env
+./frontend/.env
+.aws/
+id_rsa
+*.key
+
+# Source control
+.git
+.gitignore
+
+# Dependencies and build artifacts
+.backend/node_modules/
+.frontend/node_modules/
+node_modules/
+target/
+dist/
+
+__pycache__/
+*.pyc
+
+# Logs and temporary files
+*.log
+temp/

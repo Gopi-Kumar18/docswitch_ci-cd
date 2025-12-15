@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from "react";
+import CardItem from "../otherComponents/CardItem";
+import CardData from "../otherComponents/CardData";
+
+import '../Styles/OtherPdfTools.css';
+
+import compressPdf from '../assets/compress-pdf.webp';
+import mergePdf from '../assets/merge-1.webp';
+import splitPdf from '../assets/split-pdf.webp';
+import protectPdf from '../assets/protect_pdf.webp';
+import signPdf from '../assets/sign_pdf-1.webp';
+import unlockPdf from '../assets/unlock_pdf.webp';
+import watermarkPdf from '../assets/watermark-1.webp';
+import ocrPdf from '../assets/apply-ocr.webp';
+
+const OtherPdfTools = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+ 
+  const sliderImages = [
+    compressPdf,
+    mergePdf,
+    splitPdf,
+    protectPdf,
+    signPdf,
+    unlockPdf,
+    watermarkPdf,
+    ocrPdf,
+  ];
+
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentSlide(prevSlide => (prevSlide + 1) % sliderImages.length);
+    }, 5000);
+    return () => clearInterval(slideInterval);
+  }, []);
+
+  return (
+    <>
+      <br />
+      <div className="container my-5">
+        <h1 className="text-center mb-4">All PDF Tools</h1>
+        <h5 className="text-center">Utilize our powerful tools to edit, convert, and organize PDFs with ease and speed.</h5>
+        <br />
+        <div className="pdf-tools-section-container">
+          <div className="pdf-slider-container" style={{ aspectRatio: 4 / 2.3 }}>
+            {sliderImages.map((src, index) => (
+              <img
+                key={index}
+                src={src}
+                alt={`PDF Tool Slide ${index + 1}`}
+                className={`pdf-slide ${index === currentSlide ? 'active' : ''}`}
+              />
+            ))}
+          </div>
+        </div>
+        <br />
+        <div className="row justify-content-center">
+          {CardData.slice(6, 11).map((card, index) => (
+            <CardItem key={index} {...card} />
+          ))}
+        </div>
+        <br />
+        <h3 style={{ textAlign: "center" }}>Secure Pdf's</h3>
+        <br />
+        <div className="row justify-content-center">
+          {CardData.slice(11, 13).map((card, index) => (
+            <CardItem key={index} {...card} />
+          ))}
+        </div>
+        <br />
+        <div className="row justify-content-center">
+          {CardData.slice(21, 23).map((card, index) => (
+            <CardItem key={index} {...card} />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default OtherPdfTools;
