@@ -79,10 +79,10 @@ pipeline {
             bat "docker logout"
         }
         success {
-            echo 'Pipeline successfully completed! Your site is updating.'
+            echo '✅ Pipeline successfully completed! Your site is updating.'
         }
         failure {
-            echo 'Pipeline failed. Check logs.'
+            echo 'Pipeline failed. Check logs...😓'
         }
     }
 }

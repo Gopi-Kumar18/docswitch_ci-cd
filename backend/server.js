@@ -26,7 +26,7 @@ applyMiddlewares(app);
 
 
 app.get('/', (req, res) => {
-  res.send("Backend server is running...Done");
+  res.send("<b>Backend Server is running.</b>");
 });
 
 app.use('/api',convertRoutes);
