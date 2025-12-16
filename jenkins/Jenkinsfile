@@ -1,0 +1,88 @@
+pipeline {
+    agent any
+
+    environment {
+
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
+        DOCKER_IMAGE_FE = 'gopikumar1/docswitch-fe'
+        DOCKER_IMAGE_BE = 'gopikumar1/docswitch-be'
+        
+
+        RENDER_HOOK_FE = 'https://api.render.com/deploy/srv-d50g390gjchc73cbt790?key=ZEELl3qufw0'
+        RENDER_HOOK_BE = 'https://api.render.com/deploy/srv-d50hm1p5pdvs7393pd10?key=n-DJSbjcQFo'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // -------- Pulls code from your GitHub Repo -------/
+                checkout scm
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                script {
+                    echo 'Building Frontend...'
+                    bat "docker build --build-arg VITE_BACKEND_URL=https://api-docswitch.onrender.com -t %DOCKER_IMAGE_FE%:latest ."
+                }
+            }
+        }
+
+        stage('Build Backend Image') {
+            steps {
+                script {
+                    echo 'Building Backend...'
+                    // Assuming backend Dockerfile is in root or a specific folder. 
+                    // If in a subfolder, use: bat "docker build -t %DOCKER_IMAGE_BE%:latest ./backend"
+                    bat "docker build -t %DOCKER_IMAGE_BE%:latest ." 
+                }
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    echo 'Logging in...'
+                    bat "docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%"
+                }
+            }
+        }
+
+        stage('Push Images to Docker Hub') {
+            steps {
+                script {
+                    echo 'Pushing images...'
+                    bat "docker push %DOCKER_IMAGE_FE%:latest"
+                    bat "docker push %DOCKER_IMAGE_BE%:latest"
+                }
+            }
+        }
+
+        stage('Deploy to Render') {
+            steps {
+                script {
+                    echo 'Triggering Render Deployment...'
+                    // Using curl to hit the webhook. 
+                    // On Windows PowerShell/CMD, curl might be aliased. 
+                    // If this fails, simple PowerShell invoke-webrequest works too.
+                    bat "curl -X POST %RENDER_HOOK_FE%"
+                    bat "curl -X POST %RENDER_HOOK_BE%"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // ----- Logout to be safe -----
+            bat "docker logout"
+        }
+        success {
+            echo 'Pipeline successfully completed! Your site is updating.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs.'
+        }
+    }
+}
