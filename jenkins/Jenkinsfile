@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building Frontend...'
-                    bat "docker build --build-arg VITE_BACKEND_URL=https://api-docswitch.onrender.com -t %DOCKER_IMAGE_FE%:latest ."
+                    bat "docker build --build-arg VITE_BACKEND_URL=https://api-docswitch.onrender.com -t %DOCKER_IMAGE_FE%:latest ./frontend"
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
                     echo 'Building Backend...'
                     // Assuming backend Dockerfile is in root or a specific folder. 
                     // If in a subfolder, use: bat "docker build -t %DOCKER_IMAGE_BE%:latest ./backend"
-                    bat "docker build -t %DOCKER_IMAGE_BE%:latest ." 
+                    bat "docker build -t %DOCKER_IMAGE_BE%:latest ./backend" 
                 }
             }
         }
